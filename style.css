@@ -1,0 +1,39 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 15px;
+  background: #f4f4f4;
+}
+
+h1 {
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 8px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  border-radius: 5px;
+}
+
+.section {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+input {
+  width: 100%;
+  margin: 5px 0;
+  padding: 6px;
+}
