@@ -1,43 +1,145 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maison Simple</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<h1>🏠 Maison Simple</h1>
+<header class="top-header">
+  <div class="top-left">
+    <div class="app-icon">🏠</div>
+    <div>
+      <div class="greeting">Bon après-midi</div>
+      <div class="date">Dimanche</div>
+    </div>
+  </div>
+</header>
 
-<nav>
-  <button onclick="showSection('repas')">🍽️ Repas</button>
-  <button onclick="showSection('stocks')">📦 Stocks</button>
-  <button onclick="showSection('taches')">🧹 Tâches</button>
+<main>
+
+  <!-- ACCUEIL -->
+  <section class="page active" id="home">
+
+    <h1 class="title">Bonjour 👋</h1>
+    <p class="subtitle">Voici votre récapitulatif</p>
+
+    <div class="stats">
+      <div class="stat-card">
+        🍽️
+        <strong>0</strong>
+        <span>repas planifiés</span>
+      </div>
+      <div class="stat-card">
+        📦
+        <strong>0</strong>
+        <span>articles stock</span>
+      </div>
+      <div class="stat-card">
+        💳
+        <strong>0 €</strong>
+        <span>solde total</span>
+      </div>
+    </div>
+
+    <div class="card green">
+      <div class="card-header">
+        <span>🍽️ Repas de la semaine</span>
+        <span class="link">Voir tout ›</span>
+      </div>
+
+      <div class="week-preview">
+        <div>Lun</div><div>Mar</div><div>Mer</div>
+        <div>Jeu</div><div>Ven</div><div>Sam</div>
+        <div class="active-day">Dim</div>
+      </div>
+
+      <button class="primary">📅 Planifier mes repas</button>
+    </div>
+
+    <div class="card orange">
+      <div class="card-header">
+        <span>📦 Mon stock</span>
+        <span class="link">Voir tout ›</span>
+      </div>
+
+      <p class="empty">Ajoutez vos premiers articles</p>
+      <button class="secondary">Gérer mon stock</button>
+    </div>
+
+    <div class="card yellow">
+      <div class="card-header">
+        <span>💳 Mes finances</span>
+        <span class="link">Voir tout ›</span>
+      </div>
+
+      <div class="finance">
+        <div>Courant<br><strong>0 €</strong></div>
+        <div>Épargne<br><strong>0 €</strong></div>
+        <div>Commun<br><strong>0 €</strong></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- REPAS -->
+  <section class="page" id="meals">
+    <h1 class="title">Repas</h1>
+    <p class="subtitle">Planifiez vos repas de la semaine</p>
+
+    <div class="card">
+      <div class="week-nav">
+        ‹ Semaine en cours ›
+      </div>
+
+      <div class="meal-day">
+        <strong>Lundi</strong>
+        <div class="meal-slot">☀️ Midi · + Ajouter</div>
+        <div class="meal-slot">🌙 Soir · + Ajouter</div>
+      </div>
+
+      <div class="meal-day">
+        <strong>Mardi</strong>
+        <div class="meal-slot">☀️ Midi · + Ajouter</div>
+        <div class="meal-slot">🌙 Soir · + Ajouter</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STOCK -->
+  <section class="page" id="stock">
+    <h1 class="title">Stock</h1>
+    <p class="subtitle">Suivi de vos produits</p>
+
+    <div class="card">
+      <p class="empty">Aucun article pour le moment</p>
+    </div>
+  </section>
+
+  <!-- FINANCES -->
+  <section class="page" id="finance">
+    <h1 class="title">Finances</h1>
+    <p class="subtitle">À venir</p>
+
+    <div class="card">
+      <p class="empty">Module en préparation</p>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button onclick="go('home')" class="active">🏠<span>Accueil</span></button>
+  <button onclick="go('meals')">🍽️<span>Repas</span></button>
+  <button onclick="go('stock')">📦<span>Stock</span></button>
+  <button onclick="go('finance')">💳<span>Finances</span></button>
 </nav>
-
-<section id="repas" class="section">
-  <h2>Repas du jour</h2>
-  <input id="repasInput" placeholder="Ex : Pâtes, restes...">
-  <button onclick="saveRepas()">Enregistrer</button>
-  <p id="repasAffiche"></p>
-</section>
-
-<section id="stocks" class="section hidden">
-  <h2>Stocks alimentaires</h2>
-  <input id="stockNom" placeholder="Aliment">
-  <input id="stockQte" placeholder="Quantité">
-  <button onclick="addStock()">Ajouter</button>
-  <ul id="stockListe"></ul>
-</section>
-
-<section id="taches" class="section hidden">
-  <h2>Tâches maison</h2>
-  <input id="tacheInput" placeholder="Ex : Passer l’aspirateur">
-  <button onclick="addTache()">Ajouter</button>
-  <ul id="tacheListe"></ul>
-</section>
 
 <script src="app.js"></script>
 <script>
