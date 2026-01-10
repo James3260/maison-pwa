@@ -4,37 +4,64 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestion Maison</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
   <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
   <header>
     <h1>Gestion Maison</h1>
   </header>
+  <nav>
+    <button class="tab-button active" data-tab="repas">Repas</button>
+    <button class="tab-button" data-tab="stocks">Stocks</button>
+    <button class="tab-button" data-tab="courses">Courses</button>
+  </nav>
   <main>
-    <section id="repas">
-      <h2>Repas de la semaine</h2>
-      <ul id="liste-repas" class="item-list"></ul>
-      <form id="ajout-repas" class="add-form">
-        <input type="text" id="nouveau-repas" placeholder="Ajouter un repas" required>
-        <button type="submit">Ajouter</button>
-      </form>
+    <!-- Onglet Repas -->
+    <section id="repas" class="tab-content active">
+      <h2>Calendrier des repas</h2>
+      <div class="calendar">
+        <div class="day" data-day="lundi">
+          <h3>Lundi</h3>
+          <ul class="meal-list" id="repas-lundi"></ul>
+          <form class="add-meal-form" data-day="lundi">
+            <input type="text" placeholder="Repas du lundi" required>
+            <button type="submit"><i class="fas fa-plus"></i></button>
+          </form>
+        </div>
+        <!-- Répète pour mardi, mercredi, etc. -->
+      </div>
     </section>
-    <section id="stocks">
+
+    <!-- Onglet Stocks -->
+    <section id="stocks" class="tab-content">
       <h2>Stocks alimentaires</h2>
-      <ul id="liste-stocks" class="item-list"></ul>
-      <form id="ajout-stock" class="add-form">
-        <input type="text" id="nouvel-aliment" placeholder="Nom de l'aliment" required>
-        <input type="number" id="quantite" placeholder="Quantité" required>
-        <input type="date" id="peremption" placeholder="Date de péremption">
-        <button type="submit">Ajouter</button>
-      </form>
+      <div class="stock-categories">
+        <div class="category">
+          <h3>Congélateur <i class="fas fa-snowflake"></i></h3>
+          <ul class="stock-list" id="stocks-congelateur"></ul>
+          <form class="add-stock-form" data-category="congelateur">
+            <input type="text" placeholder="Nom de l'aliment" required>
+            <input type="number" placeholder="Quantité" required>
+            <input type="date" placeholder="Date de péremption">
+            <button type="submit"><i class="fas fa-plus"></i></button>
+          </form>
+        </div>
+        <!-- Répète pour Frigo et Placard -->
+      </div>
     </section>
-    <section id="courses">
+
+    <!-- Onglet Courses -->
+    <section id="courses" class="tab-content">
       <h2>Liste de courses</h2>
-      <ul id="liste-courses" class="item-list"></ul>
+      <ul class="shopping-list" id="liste-courses"></ul>
+      <form id="ajout-course">
+        <input type="text" placeholder="Ajouter un article" required>
+        <button type="submit"><i class="fas fa-plus"></i></button>
+      </form>
     </section>
   </main>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
