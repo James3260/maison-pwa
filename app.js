@@ -1,90 +1,142 @@
-// Données de base
-let repas = JSON.parse(localStorage.getItem('repas')) || [];
-let stocks = JSON.parse(localStorage.getItem('stocks')) || [];
-let courses = JSON.parse(localStorage.getItem('courses')) || [];
+// Données
+const data = {
+  repas: JSON.parse(localStorage.getItem('repas')) || {
+    lundi: [], mardi: [], mercredi: [], jeudi: [], vendredi: [], samedi: [], dimanche: []
+  },
+  stocks: JSON.parse(localStorage.getItem('stocks')) || {
+    congelateur: [], frigo: [], placard: []
+  },
+  courses: JSON.parse(localStorage.getItem('courses')) || []
+};
 
-// Chargement des données au démarrage
+// DOM
 document.addEventListener('DOMContentLoaded', () => {
+  // Gestion des onglets
+  const tabButtons = document.querySelectorAll('.tab-button');
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(button.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Chargement initial
   afficherRepas();
   afficherStocks();
   afficherCourses();
 
-  // Ajout d'un repas
-  document.getElementById('ajout-repas').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('nouveau-repas');
-    repas.push(input.value);
-    input.value = '';
-    sauvegarderDonnees();
-    afficherRepas();
+  // Ajout de repas
+  document.querySelectorAll('.add-meal-form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const day = form.dataset.day;
+      const input = form.querySelector('input');
+      data.repas[day].push(input.value);
+      sauvegarderDonnees();
+      afficherRepas();
+      input.value = '';
+    });
   });
 
-  // Ajout d'un stock
-  document.getElementById('ajout-stock').addEventListener('submit', (e) => {
+  // Ajout de stock
+  document.querySelectorAll('.add-stock-form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const category = form.dataset.category;
+      const inputs = form.querySelectorAll('input');
+      const stock = {
+        name: inputs[0].value,
+        quantity: inputs[1].value,
+        expiry: inputs[2].value
+      };
+      data.stocks[category].push(stock);
+      sauvegarderDonnees();
+      afficherStocks();
+      form.reset();
+    });
+  });
+
+  // Ajout de course
+  document.getElementById('ajout-course').addEventListener('submit', (e) => {
     e.preventDefault();
-    const aliment = document.getElementById('nouvel-aliment').value;
-    const quantite = document.getElementById('quantite').value;
-    const peremption = document.getElementById('peremption').value;
-    stocks.push({ aliment, quantite, peremption });
-    document.getElementById('ajout-stock').reset();
+    const input = e.target.querySelector('input');
+    data.courses.push(input.value);
     sauvegarderDonnees();
-    afficherStocks();
+    afficherCourses();
+    input.value = '';
   });
 });
 
-// Affichage des repas
+// Fonctions d'affichage
 function afficherRepas() {
-  const liste = document.getElementById('liste-repas');
-  liste.innerHTML = repas.map((r, index) =>
-    `<li>
-      <span>${r}</span>
-      <button class="delete" data-index="${index}" data-type="repas">Supprimer</button>
-    </li>`
-  ).join('');
+  for (const day in data.repas) {
+    const list = document.getElementById(`repas-${day}`);
+    if (list) {
+      list.innerHTML = data.repas[day].map((repas, index) =>
+        `<li>
+          ${repas}
+          <button class="delete-btn" data-day="${day}" data-index="${index}"><i class="fas fa-trash"></i></button>
+        </li>`
+      ).join('');
+    }
+  }
 }
 
-// Affichage des stocks
 function afficherStocks() {
-  const liste = document.getElementById('liste-stocks');
-  liste.innerHTML = stocks.map((s, index) =>
-    `<li>
-      <div>
-        <strong>${s.aliment}</strong> (${s.quantite}) - ${s.peremption || 'Pas de date'}
-      </div>
-      <button class="delete" data-index="${index}" data-type="stock">Supprimer</button>
-    </li>`
-  ).join('');
+  for (const category in data.stocks) {
+    const list = document.getElementById(`stocks-${category}`);
+    if (list) {
+      list.innerHTML = data.stocks[category].map((stock, index) => {
+        const isExpiringSoon = stock.expiry && new Date(stock.expiry) < new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        return `
+          <li class="${isExpiringSoon ? 'expiring-soon' : ''}">
+            <div>
+              <strong>${stock.name}</strong> (${stock.quantity}) - ${stock.expiry || 'Pas de date'}
+            </div>
+            <button class="delete-btn" data-category="${category}" data-index="${index}"><i class="fas fa-trash"></i></button>
+          </li>
+        `;
+      }).join('');
+    }
+  }
 }
 
-// Affichage des courses
 function afficherCourses() {
-  const liste = document.getElementById('liste-courses');
-  liste.innerHTML = courses.map((c, index) =>
+  const list = document.getElementById('liste-courses');
+  list.innerHTML = data.courses.map((course, index) =>
     `<li>
-      <span>${c}</span>
-      <button class="delete" data-index="${index}" data-type="course">Supprimer</button>
+      ${course}
+      <button class="delete-btn" data-index="${index}"><i class="fas fa-trash"></i></button>
     </li>`
   ).join('');
 }
 
-// Sauvegarde dans le stockage local
-function sauvegarderDonnees() {
-  localStorage.setItem('repas', JSON.stringify(repas));
-  localStorage.setItem('stocks', JSON.stringify(stocks));
-  localStorage.setItem('courses', JSON.stringify(courses));
-}
-
-// Gestion des suppressions
+// Suppression
 document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('delete')) {
-    const index = e.target.dataset.index;
-    const type = e.target.dataset.type;
-    if (type === 'repas') repas.splice(index, 1);
-    else if (type === 'stock') stocks.splice(index, 1);
-    else if (type === 'course') courses.splice(index, 1);
+  if (e.target.closest('.delete-btn')) {
+    const btn = e.target.closest('.delete-btn');
+    const index = btn.dataset.index;
+    if (btn.dataset.day) {
+      const day = btn.dataset.day;
+      data.repas[day].splice(index, 1);
+    } else if (btn.dataset.category) {
+      const category = btn.dataset.category;
+      data.stocks[category].splice(index, 1);
+    } else {
+      data.courses.splice(index, 1);
+    }
     sauvegarderDonnees();
     afficherRepas();
     afficherStocks();
     afficherCourses();
   }
 });
+
+// Sauvegarde
+function sauvegarderDonnees() {
+  localStorage.setItem('repas', JSON.stringify(data.repas));
+  localStorage.setItem('stocks', JSON.stringify(data.stocks));
+  localStorage.setItem('courses', JSON.stringify(data.courses));
+}
