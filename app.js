@@ -1,55 +1,39 @@
-// Données (remplace par du stockage local plus tard)
-let repas = [];
-let stocks = [];
-let courses = [];
-
-// DOM Elements
-const listeRepas = document.getElementById('liste-repas');
-const listeStocks = document.getElementById('liste-stocks');
-const listeCourses = document.getElementById('liste-courses');
-const formRepas = document.getElementById('ajout-repas');
-const formStock = document.getElementById('ajout-stock');
-
-// Afficher les repas
+// Dans la fonction afficherRepas()
 function afficherRepas() {
-  listeRepas.innerHTML = repas.map(repas => `<li>${repas}</li>`).join('');
-}
-
-// Afficher les stocks
-function afficherStocks() {
-  listeStocks.innerHTML = stocks.map(stock =>
-    `<li>${stock.nom} (${stock.quantite}) - Péremption: ${stock.peremption || 'non renseignée'}</li>`
+  const liste = document.getElementById('liste-repas');
+  liste.innerHTML = repas.map((r, index) =>
+    `<li>
+      ${r}
+      <button class="delete" data-index="${index}" data-type="repas">Supprimer</button>
+    </li>`
   ).join('');
 }
 
-// Afficher la liste de courses
-function afficherCourses() {
-  listeCourses.innerHTML = courses.map(course => `<li>${course}</li>`).join('');
+// Dans la fonction afficherStocks()
+function afficherStocks() {
+  const liste = document.getElementById('liste-stocks');
+  liste.innerHTML = stocks.map((s, index) =>
+    `<li>
+      <div>
+        <strong>${s.aliment}</strong> (${s.quantite}) - ${s.peremption || 'Pas de date'}
+      </div>
+      <button class="delete" data-index="${index}" data-type="stock">Supprimer</button>
+    </li>`
+  ).join('');
 }
 
-// Ajouter un repas
-formRepas.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const input = document.getElementById('nouveau-repas');
-  repas.push(input.value);
-  afficherRepas();
-  input.value = '';
+// Ajoute cet écouteur d'événement pour la suppression
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete')) {
+    const index = e.target.dataset.index;
+    const type = e.target.dataset.type;
+    if (type === 'repas') {
+      repas.splice(index, 1);
+    } else if (type === 'stock') {
+      stocks.splice(index, 1);
+    }
+    sauvegarderDonnees();
+    afficherRepas();
+    afficherStocks();
+  }
 });
-
-// Ajouter un stock
-formStock.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const nom = document.getElementById('nouvel-aliment').value;
-  const quantite = document.getElementById('quantite').value;
-  const peremption = document.getElementById('peremption').value;
-  stocks.push({ nom, quantite, peremption });
-  afficherStocks();
-  document.getElementById('nouvel-aliment').value = '';
-  document.getElementById('quantite').value = '';
-  document.getElementById('peremption').value = '';
-});
-
-// Initialisation
-afficherRepas();
-afficherStocks();
-afficherCourses();
